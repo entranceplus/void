@@ -1,0 +1,8 @@
+-- Your SQL goes here
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  url VARCHAR NOT NULL ,
+  tags VARCHAR NOT NULL,
+  content VARCHAR NOT NULL,
+  title VARCHAR NOT NULL
+)
