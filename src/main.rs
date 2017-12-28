@@ -59,6 +59,11 @@ fn new(post_json: Json<PostE>, conn: db::Conn) -> Json<GenResponse> {
     Json(response)
 }
 
+#[get("/")]
+fn all(conn: db::Conn) -> Json<Vec<Post>> {
+    Json(Post::all(&conn))
+}
+
 pub fn establish_connection() -> PgConnection {
     dotenv().ok();
 
@@ -76,6 +81,6 @@ fn main() {
     rocket::ignite()
         .manage(pool)
         .mount("/", routes![index])
-        .mount("/posts/", routes![new])
+        .mount("/posts/", routes![new, all])
         .launch();
 }

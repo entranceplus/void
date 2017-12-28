@@ -4,17 +4,17 @@ use diesel::pg::PgConnection;
 
 use schema::posts;
 
-#[table_name = "posts"]
-#[derive(Queryable, Insertable)]
+#[derive(Queryable, Deserialize, Serialize)]
 pub struct Post {
-    pub id: Option<i32>,
+    pub id: i32,
     pub url: String,
     pub title: String,
     pub tags: String,
     pub content: String,
 }
 
-#[derive(Deserialize)]
+#[table_name = "posts"]
+#[derive(Deserialize, Insertable)]
 pub struct PostE {
     pub url: String,
     pub title: String,
@@ -23,14 +23,12 @@ pub struct PostE {
 }
 
 impl Post {
-//    pub fn all(conn: &PgConnection) -> Vec<Post> {
-//        posts.limit(2)
-//            .load::<Post>(*conn)
-//            .expect("Error")
-//    }
+    pub fn all(conn: &PgConnection) -> Vec<Post> {
+        use schema::posts::dsl::*;
+        posts.load::<Post>(conn).unwrap()
+    }
 
     pub fn add(p: PostE, conn: &PgConnection) -> bool {
-        let post = Post { id: None, url: p.url, title: p.title, tags: p.tags, content: p.content };
-        diesel::insert_into(posts::table).values(&post).execute(conn).is_ok()
+        diesel::insert_into(posts::table).values(&p).execute(conn).is_ok()
     }
 }
