@@ -1,26 +1,62 @@
 #![feature(plugin)]
-#![plugin(rocket_codegen)]
+#![plugin(rocket_codegen, dotenv_macros)]
 
 extern crate rocket;
 
 #[macro_use]
-extern crate diesel;
+extern crate rocket_contrib;
 
+#[macro_use]
+extern crate diesel;
 extern crate dotenv;
+
+extern crate r2d2;
+extern crate r2d2_postgres;
+extern crate r2d2_diesel;
+
+extern crate serde;
+
+#[macro_use]
+extern crate serde_derive;
 
 use self::diesel::prelude::*;
 
 
 use diesel::pg::PgConnection;
+
 use dotenv::dotenv;
 use std::env;
 
+use rocket_contrib::{Json};
+
 mod post;
 mod schema;
+mod db;
+
+#[cfg(test)]
+mod tests;
+
+use self::post::*;
+
+#[derive (Serialize, Deserialize)]
+struct GenResponse {
+    message: &'static str,
+}
 
 #[get("/")]
 fn index() -> &'static str {
     "Hello, guy!"
+}
+
+#[post("/", format = "application/json", data = "<post_json>")]
+fn new(post_json: Json<PostE>, conn: db::Conn) -> Json<GenResponse> {
+    let post = post_json.into_inner();
+    let response = if Post::add(post, &conn) {
+        GenResponse { message: "Posts added successfully", }
+    } else {
+         GenResponse { message: "Not gonna happen", }
+    };
+    Json(response)
 }
 
 pub fn establish_connection() -> PgConnection {
@@ -33,18 +69,13 @@ pub fn establish_connection() -> PgConnection {
 }
 
 fn main() {
-    use self::post::*;
+    dotenv().ok();
 
-    let connection: PgConnection = establish_connection();
+    let pool = db::init_pool();
 
-    let results = Post::all(&connection);
-
-    println!("Displaying {} posts", results.len());
-    for post in results {
-        println!("{}", post.title);
-        println!("----------\n");
-        println!("{}", post.url);
-    }
-
-    //rocket::ignite().mount("/", routes![index]).launch();
+    rocket::ignite()
+        .manage(pool)
+        .mount("/", routes![index])
+        .mount("/posts/", routes![new])
+        .launch();
 }
