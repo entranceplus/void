@@ -1,21 +1,21 @@
-### Links
+# Links
 
 ## Dev setup 
 
-# Run migrations
+### Run migrations
 
 ```shell
 cargo install diesel_cli --no-default-features --features postgres
 diesel setup 
 ```
 
-# Compile
+### Compile
 
 ```shell
 cargo build
 ```
 
-# Run
+### Run
 
 ```shell
 cargo run
