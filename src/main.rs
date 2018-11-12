@@ -102,5 +102,6 @@ mod test {
         let mut response = client.get("/").dispatch();
 
         assert_eq!(response.status(), Status::Ok);
+        assert_eq!(response.body_string(), Some("Hello, guy!".into()))
     }
 }
