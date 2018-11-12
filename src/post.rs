@@ -33,3 +33,30 @@ impl Post {
         diesel::insert_into(posts::table).values(&p).execute(conn).is_ok()
     }
 }
+
+
+fn get_subreddit_posts(sub: &str) -> Result<String, reqwest::Error>{
+    
+    let body = reqwest::get("https://www.rust-lang.org")?.text()?;
+    info!("body is {:?}", body);
+
+    Ok(body)
+}
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+   
+    extern crate env_logger;
+
+    use std::env;
+    use env_logger::{Builder, Target};
+    
+    #[test]
+    fn test_parser() {
+        let _ = env_logger::try_init();
+        
+        assert!(get_subreddit_posts("rust").is_ok());
+    }
+}

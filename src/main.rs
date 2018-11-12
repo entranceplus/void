@@ -5,8 +5,8 @@
 
 extern crate rocket_contrib;
 
-#[macro_use]
-extern crate diesel;
+#[macro_use] extern crate diesel;
+
 extern crate dotenv;
 
 extern crate r2d2;
@@ -15,8 +15,12 @@ extern crate r2d2_diesel;
 
 extern crate serde;
 
-#[macro_use]
-extern crate serde_derive;
+#[macro_use] extern crate serde_derive;
+
+extern crate reqwest;
+
+#[macro_use] extern crate log;
+extern crate env_logger;
 
 use self::diesel::prelude::*;
 
@@ -86,6 +90,7 @@ fn rocket() -> Rocket {
 }
 
 fn main() {
+    env_logger::init();
     rocket().launch();
 }
 
