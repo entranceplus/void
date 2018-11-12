@@ -1,9 +1,8 @@
-#![feature(plugin)]
-#![plugin(rocket_codegen, dotenv_macros)]
+#![allow(proc_macro_derive_resolution_fallback)]
+#![feature(proc_macro_hygiene, decl_macro)]
 
-extern crate rocket;
+#[macro_use] extern crate rocket;
 
-#[macro_use]
 extern crate rocket_contrib;
 
 #[macro_use]
@@ -27,7 +26,7 @@ use diesel::pg::PgConnection;
 use dotenv::dotenv;
 use std::env;
 
-use rocket_contrib::{Json};
+use rocket_contrib::json::{Json};
 
 mod post;
 mod schema;

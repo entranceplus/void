@@ -4,6 +4,7 @@ use diesel::pg::PgConnection;
 
 use schema::posts;
 
+
 #[derive(Queryable, Deserialize, Serialize)]
 pub struct Post {
     pub id: i32,
