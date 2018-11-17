@@ -20,3 +20,10 @@ cargo build
 ```shell
 cargo run
 ```
+
+
+### Watch and test
+
+```shell
+	make
+```

@@ -1,5 +1,6 @@
 #![allow(proc_macro_derive_resolution_fallback)]
 #![feature(proc_macro_hygiene, decl_macro)]
+#![feature(result_map_or_else)]
 
 #[macro_use] extern crate rocket;
 
@@ -14,6 +15,7 @@ extern crate r2d2_postgres;
 extern crate r2d2_diesel;
 
 extern crate serde;
+#[macro_use] extern crate serde_json;
 
 #[macro_use] extern crate serde_derive;
 
